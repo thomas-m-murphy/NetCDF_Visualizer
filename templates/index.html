@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3-D NC Plot with Field Lines</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+    }
+    .sidebar {
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+    .content {
+      padding: 20px;
+    }
+    .spinner-border {
+      display: none;
+      width: 3rem;
+      height: 3rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -1.5rem;
+      margin-left: -1.5rem;
+      z-index: 1000;
+    }
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      z-index: 999;
+    }
+    .field-line-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+    }
+    .field-line-item span {
+      flex-grow: 1;
+    }
+    .field-line-item button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">OMNIWeb</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="https://omniweb.gsfc.nasa.gov/">OMNIWeb Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://spdf.gsfc.nasa.gov/">SPDF</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="row">
+    <!-- Sidebar -->
+    <nav class="col-md-3 col-lg-2 sidebar bg-light d-none d-md-block">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('data_visualization') }}">Line Plot Visualization</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">3D Plot Visualization</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">User Guide</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="col-md-9 col-lg-10 content">
+      <h2>Upload .nc File for Plotting</h2>
+      <form id="plotForm" method="post" enctype="multipart/form-data">
+        <div class="form-row">
+          <!-- File input -->
+          <div class="form-group col-md-4">
+            <label for="ncFile">Choose .nc file:</label>
+            <input type="file" class="form-control-file" id="ncFile" name="ncFile" accept=".nc" required>
+          </div>
+          <!-- Variable selection -->
+          <div class="form-group col-md-2">
+            <label for="variable">Select Variable:</label>
+            <select class="form-control" id="variable" name="variable" required>
+              <option value="Bx">Bx</option>
+              <option value="By">By</option>
+              <option value="Bz">Bz</option>
+            </select>
+          </div>
+          <!-- Color scale -->
+          <div class="form-group col-md-2">
+            <label for="minScale">Min Scale:</label>
+            <input type="number" class="form-control" id="minScale" name="minScale" value="-1" required>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="maxScale">Max Scale:</label>
+            <input type="number" class="form-control" id="maxScale" name="maxScale" value="1" required>
+          </div>
+          <!-- Opacity -->
+          <div class="form-group col-md-2">
+            <label for="opacity">Opacity (0 to 100):</label>
+            <input type="number" class="form-control" id="opacity" name="opacity" value="50"
+                   min="0" max="100" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- X range -->
+          <div class="form-group col-md-2">
+            <label for="inputField1">X Min:</label>
+            <input type="number" class="form-control" id="inputField1" name="inputField1" value="0" required>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="inputField2">X Max:</label>
+            <input type="number" class="form-control" id="inputField2" name="inputField2" value="201" required>
+          </div>
+          <!-- Y range -->
+          <div class="form-group col-md-2">
+            <label for="inputField3">Y Min:</label>
+            <input type="number" class="form-control" id="inputField3" name="inputField3" value="0" required>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="inputField4">Y Max:</label>
+            <input type="number" class="form-control" id="inputField4" name="inputField4" value="201" required>
+          </div>
+          <!-- Z range -->
+          <div class="form-group col-md-2">
+            <label for="inputField5">Z Min:</label>
+            <input type="number" class="form-control" id="inputField5" name="inputField5" value="0" required>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="inputField6">Z Max:</label>
+            <input type="number" class="form-control" id="inputField6" name="inputField6" value="201" required>
+          </div>
+        </div>
+
+        <!-- Cross-sections -->
+        <h3>Cross Sections</h3>
+        <div id="crossSectionContainer"></div>
+        <button type="button" class="btn btn-secondary mb-3" id="addCrossSectionBtn">Add Cross-Section</button>
+        <div class="form-row">
+          <button type="submit" class="btn btn-primary">Plot</button>
+        </div>
+      </form>
+
+      <!-- Spinner / Overlay -->
+      <div class="loading-overlay"></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+
+      <!-- IFRAMES -->
+      <h2>3D Contour Plot (iframe)</h2>
+      <iframe id="plotFrame3D" width="100%" height="600px" frameborder="0"></iframe>
+
+      <!-- Field Lines -->
+      <h2>Field Lines</h2>
+      <div class="form-row mt-3">
+        <div class="form-group col-md-2">
+          <label for="manualX">X:</label>
+          <input type="number" class="form-control" id="manualX">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="manualY">Y:</label>
+          <input type="number" class="form-control" id="manualY">
+        </div>
+        <div class="form-group col-md-2">
+          <label for="manualZ">Z:</label>
+          <input type="number" class="form-control" id="manualZ">
+        </div>
+        <div class="form-group col-md-2 align-self-end">
+          <button class="btn btn-info btn-block" id="traceFieldLineBtn">Trace Field Line</button>
+        </div>
+      </div>
+      <div id="fieldLinesContainer"></div>
+
+      <h2>Cross Section Plot</h2>
+      <iframe id="plotFrame2" width="100%" height="600px" frameborder="0"></iframe>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  // Add cross-sections
+  document.getElementById('addCrossSectionBtn').addEventListener('click', function() {
+    const row = document.createElement('div');
+    row.classList.add('form-row','mb-3');
+
+    const axisDiv = document.createElement('div');
+    axisDiv.classList.add('form-group','col-md-4');
+    const axisLabel = document.createElement('label');
+    axisLabel.textContent = 'Axis:';
+    const axisSelect = document.createElement('select');
+    axisSelect.classList.add('form-control');
+    axisSelect.name = 'crossSectionAxis[]';
+    ['x','y','z'].forEach(a=>{
+      let opt = document.createElement('option');
+      opt.value = a;
+      opt.textContent = a.toUpperCase();
+      axisSelect.appendChild(opt);
+    });
+    axisDiv.appendChild(axisLabel);
+    axisDiv.appendChild(axisSelect);
+
+    const valDiv = document.createElement('div');
+    valDiv.classList.add('form-group','col-md-4');
+    const valLabel = document.createElement('label');
+    valLabel.textContent = 'Value:';
+    const valInput = document.createElement('input');
+    valInput.classList.add('form-control');
+    valInput.name = 'crossSectionValue[]';
+    valInput.type = 'number';
+    valDiv.appendChild(valLabel);
+    valDiv.appendChild(valInput);
+
+    const opDiv = document.createElement('div');
+    opDiv.classList.add('form-group','col-md-4');
+    const opLabel = document.createElement('label');
+    opLabel.textContent = 'Opacity (0-100):';
+    const opInput = document.createElement('input');
+    opInput.classList.add('form-control');
+    opInput.name = 'crossSectionOpacity[]';
+    opInput.type = 'number';
+    opInput.value = '100';
+    opDiv.appendChild(opLabel);
+    opDiv.appendChild(opInput);
+
+    row.appendChild(axisDiv);
+    row.appendChild(valDiv);
+    row.appendChild(opDiv);
+    document.getElementById('crossSectionContainer').appendChild(row);
+  });
+
+  // Upload => load iframes
+  document.getElementById('plotForm').onsubmit = function(e){
+    e.preventDefault();
+    document.querySelector('.loading-overlay').style.display='block';
+    document.querySelector('.spinner-border').style.display='block';
+
+    let fd = new FormData(this);
+    fetch('{{ url_for("upload") }}', {
+      method:'POST',
+      body: fd
+    })
+    .then(r=>{
+      if(!r.ok) {
+        return r.text().then(t=>{throw new Error(t);});
+      }
+      return r.json();
+    })
+    .then(data=>{
+      console.log("Upload =>", data);
+      document.getElementById('plotFrame3D').src = data.plot_html_url;
+      document.getElementById('plotFrame2').src = data.plot2_url;
+
+      document.querySelector('.loading-overlay').style.display='none';
+      document.querySelector('.spinner-border').style.display='none';
+
+      // Clear existing lines
+      document.getElementById('fieldLinesContainer').innerHTML='';
+    })
+    .catch(err=>{
+      console.error("Error uploading file:", err);
+      alert("Error: " + err);
+      document.querySelector('.loading-overlay').style.display='none';
+      document.querySelector('.spinner-border').style.display='none';
+    });
+  };
+
+  // Helper => update lines list
+  function refreshFieldLines(fieldLines) {
+    let c = document.getElementById('fieldLinesContainer');
+    c.innerHTML='';
+    fieldLines.forEach(line=>{
+      let div = document.createElement('div');
+      div.classList.add('field-line-item');
+      let span = document.createElement('span');
+      span.textContent = "Field Line "+(line.index+1)+" => "
+        + "(x="+line.coordinates.x+", y="+line.coordinates.y+", z="+line.coordinates.z+")";
+      let btn = document.createElement('button');
+      btn.classList.add('btn','btn-sm','btn-danger');
+      btn.textContent="x";
+      btn.onclick = function() {
+        deleteFieldLine(line.index);
+      };
+      div.appendChild(span);
+      div.appendChild(btn);
+      c.appendChild(div);
+    });
+  }
+
+  // Manual add line => /field-line => re-render
+  document.getElementById('traceFieldLineBtn').addEventListener('click', function(){
+    let x = parseFloat(document.getElementById('manualX').value);
+    let y = parseFloat(document.getElementById('manualY').value);
+    let z = parseFloat(document.getElementById('manualZ').value);
+    if(isNaN(x)||isNaN(y)||isNaN(z)){
+      alert("Enter numeric X,Y,Z");
+      return;
+    }
+
+    fetch('{{ url_for("field_line") }}',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({x:x,y:y,z:z})
+    })
+    .then(r=>r.json())
+    .then(resp=>{
+      if(resp.error) {
+        alert(resp.error);
+        return;
+      }
+      // reload the 3D iframe with cache-buster
+      document.getElementById('plotFrame3D').src = resp.plot_html + "?t=" + new Date().getTime();
+      refreshFieldLines(resp.field_lines);
+    })
+    .catch(err=>{
+      console.error("Error adding field line:", err);
+      alert("Error adding field line");
+    });
+  });
+
+  // Delete line => re-render
+  function deleteFieldLine(index) {
+    fetch('{{ url_for("delete_field_line") }}',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ line_index: index })
+    })
+    .then(r=>r.json())
+    .then(resp=>{
+      if(resp.error){
+        alert(resp.error);
+        return;
+      }
+      // refresh the 3D iframe
+      document.getElementById('plotFrame3D').src = resp.plot_html + "?t=" + new Date().getTime();
+      refreshFieldLines(resp.field_lines);
+    })
+    .catch(err=>{
+      console.error("Error deleting field line:", err);
+      alert("Error deleting field line");
+    });
+  }
+
+  // ---------------------------------------------------
+  //  Listen for postMessage from the child 3D HTML
+  //  => If "FIELD_LINE_CLICK", call /field-line
+  // ---------------------------------------------------
+  window.addEventListener("message", function(evt){
+    try {
+      let msg = JSON.parse(evt.data);
+      if(msg.type==="FIELD_LINE_CLICK"){
+        console.log("Clicked in 3D plot =>", msg.x, msg.y, msg.z);
+        fetch('{{ url_for("field_line") }}',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ x: msg.x, y: msg.y, z: msg.z })
+        })
+        .then(r=>r.json())
+        .then(resp=>{
+          if(resp.error){
+            alert(resp.error);
+            return;
+          }
+          // Reload iframe with cache-buster
+          document.getElementById('plotFrame3D').src = resp.plot_html + "?t=" + new Date().getTime();
+          refreshFieldLines(resp.field_lines);
+        })
+        .catch(err=>{
+          console.error("Error adding line from 3D click:", err);
+          alert("Error adding field line (3D click).");
+        });
+      }
+    } catch(e){}
+  });
+</script>
+</body>
+</html>

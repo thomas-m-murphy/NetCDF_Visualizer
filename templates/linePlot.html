@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Visualization</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+    /* Adjust the checkbox grid to fit 12 columns and 2 rows */
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr); /* 12 columns */
+        grid-template-rows: repeat(2, auto);   /* 2 rows */
+        grid-gap: 3px; /* Reduce spacing for tighter layout */
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .checkbox-grid label {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem; /* Reduce font size slightly */
+        padding: 2px 4px; /* Reduce padding */
+        white-space: nowrap; /* Prevent line breaks */
+    }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">OMNIWeb</a>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://omniweb.gsfc.nasa.gov/">OMNIWeb Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://spdf.gsfc.nasa.gov/">SPDF</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 bg-light d-none d-md-block">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('data_visualization') }}">Line Plot Visualization</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Data Download</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">User Guide</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="col-md-9 col-lg-10">
+            <h2>Generate Line Plots</h2>
+            <form id="linePlotForm">
+                <div class="form-group">
+                    <label for="folderPath">Folder Path:</label>
+                    <input type="text" class="form-control" id="folderPath" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Variables:</label>
+                    <div class="checkbox-grid" id="variableCheckboxes">
+                        <label><input type="checkbox" name="variables" value="Bx"> Bx</label>
+                        <label><input type="checkbox" name="variables" value="By"> By</label>
+                        <label><input type="checkbox" name="variables" value="Bz"> Bz</label>
+                        <label><input type="checkbox" name="variables" value="Ni"> Ni</label>
+                        <label><input type="checkbox" name="variables" value="Ex"> Ex</label>
+                        <label><input type="checkbox" name="variables" value="Ey"> Ey</label>
+                        <label><input type="checkbox" name="variables" value="Ez"> Ez</label>
+                        <label><input type="checkbox" name="variables" value="Upx"> Upx</label>
+                        <label><input type="checkbox" name="variables" value="Upy"> Upy</label>
+                        <label><input type="checkbox" name="variables" value="Upz"> Upz</label>
+                        <label><input type="checkbox" name="variables" value="Ti1par"> Ti1par</label>
+                        <label><input type="checkbox" name="variables" value="Ti1per"> Ti1per</label>
+
+                        <label><input type="checkbox" name="variables" value="Jx"> Jx</label>
+                        <label><input type="checkbox" name="variables" value="Jy"> Jy</label>
+                        <label><input type="checkbox" name="variables" value="Jz"> Jz</label>
+                        <label><input type="checkbox" name="variables" value="OTFn"> OTFn</label>
+                        <label><input type="checkbox" name="variables" value="OTFT1"> OTFT1</label>
+                        <label><input type="checkbox" name="variables" value="OTFT2"> OTFT2</label>
+                        <label><input type="checkbox" name="variables" value="OTFn2"> OTFn2</label>
+                        <label><input type="checkbox" name="variables" value="OTFT12"> OTFT12</label>
+                        <label><input type="checkbox" name="variables" value="OTFT22"> OTFT22</label>
+                        <label><input type="checkbox" name="variables" value="OTFn3"> OTFn3</label>
+                        <label><input type="checkbox" name="variables" value="OTFT13"> OTFT13</label>
+                        <label><input type="checkbox" name="variables" value="OTFT23"> OTFT23</label>
+                    </div>
+                </div>
+
+                <!-- X, Y, Z inputs in one row -->
+                <div class="form-row">
+                    <div class="form-group col-md-2">
+                        <label for="x">X Coord:</label>
+                        <input type="number" class="form-control" id="x" required>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="y">Y Coord:</label>
+                        <input type="number" class="form-control" id="y" required>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="z">Z Coord:</label>
+                        <input type="number" class="form-control" id="z" required>
+                    </div>
+                    <div class="form-group col-md-6"></div> <!-- Extra space on the right -->
+                </div>
+
+                <button type="submit" class="btn btn-primary">Generate Plot</button>
+            </form>
+
+            <h3>Generated Plot</h3>
+            <img id="linePlotImage" src="" style="max-width:100%; display:none;">
+        </main>
+    </div>
+</div>
+
+<script>
+    document.getElementById("linePlotForm").onsubmit = function(event) {
+        event.preventDefault();
+        let folderPath = document.getElementById("folderPath").value;
+        let selectedVariables = Array.from(document.querySelectorAll("input[name='variables']:checked"))
+                                    .map(cb => cb.value);
+        let x = parseInt(document.getElementById("x").value);
+        let y = parseInt(document.getElementById("y").value);
+        let z = parseInt(document.getElementById("z").value);
+
+        fetch("/generate-line-plot", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ folderPath, selectedVariables, coordinate: [x, y, z] })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.plot_url) {
+                document.getElementById("linePlotImage").src = data.plot_url;
+                document.getElementById("linePlotImage").style.display = "block";
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    };
+</script>
+
+</body>
+</html>
