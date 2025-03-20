@@ -36,7 +36,7 @@ source venv/bin/activate
 After activating the virtual environment, install all required dependencies:
 
 ```sh
-pip install flask numpy scipy matplotlib plotly netCDF4 pyvista requests cftime werkzeug Jinja2 itsdangerous click blinker packaging pillow kiwisolver pooch contourpy fonttools pyparsing python-dateutil scooby typing_extensions urllib3 idna certifi charset-normalizer colorama platformdirs narwhals vtk
+pip install flask numpy scipy matplotlib plotly netCDF4 pyvista psutil vtk
 ```
 
 ### Running the Application
