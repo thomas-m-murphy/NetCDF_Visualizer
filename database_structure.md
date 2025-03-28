@@ -82,4 +82,20 @@ Users can also **drag and drop** or browse for `.nc` files and:
 | Stored in `uploads/YYYY-MM`| ✅            | ❌        |
 | Saved in SQLite DB         | ✅            | ❌        |
 | Good for large analysis    | ✅            | ✅        |
-| Auto
+| Auto-cleared storage       | ❌            | ✅        |
+| Easy to implement          | ✅            | ✅        |
+
+---
+
+## Additional Ideas
+
+Let users choose with a checkbox:
+
+```html
+<input type="checkbox" id="storeFile" name="storeFile" checked>
+<label for="storeFile">Store this file on the server for future access</label>
+```
+
+---
+
+Let me know if you'd like code for the database setup or Flask integration!
