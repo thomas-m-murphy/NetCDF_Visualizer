@@ -98,7 +98,7 @@ Users can also **drag and drop** or browse for `.nc` files and:
 
 - Offer a **Download Visualization** button for users who are using temporary files. This allows them to save their generated 3D or 2D visualizations (e.g., HTML animations or images) locally for later viewing or sharing.
 
-This gives users the benefit of temporary usage **without losing access** to interesting visualizations they create.
+    -This gives users the benefit of temporary usage **without losing access** to interesting visualizations they create.
 
 ---
 
