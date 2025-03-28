@@ -77,6 +77,11 @@ NetCDF_Visualizer/
 │── venv/                 # Virtual environment (ignored in Git)
 ```
 
+## 📘 Additional Information
+
+For more details on the structure of this project, see [`NetCDF_Visualizer/project_structure.md`](NetCDF_Visualizer/project_structure.md).
+
+
 ## Contributing
 We welcome contributions! If you find a bug, have a feature request, or want to improve the code, feel free to open an issue or submit a pull request. 🚀
 
