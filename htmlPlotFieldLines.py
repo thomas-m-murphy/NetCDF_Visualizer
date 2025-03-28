@@ -309,16 +309,18 @@ import psutil  # For memory checks
 # -----------------------------------------------------
 # GPU-BASED RENDERING OPTIMIZATIONS (OPTIONAL)
 # -----------------------------------------------------
-pv.global_theme.depth_peeling.number_of_peels = 4
-pv.global_theme.depth_peeling.occlusion_ratio = 0.0
-pv.global_theme.depth_peeling.enabled = True
-pv.global_theme.anti_aliasing = "fxaa"
-pv.global_theme.volume_mapper = "gpu"
-pv.OFF_SCREEN = False
-pv.global_theme.smooth_shading = True
-pv.global_theme.render_lines_as_tubes = True
-pv.global_theme.multi_samples = 8
+pv.global_theme.depth_peeling.number_of_peels = 4  # Number of rendering layers
+pv.global_theme.depth_peeling.occlusion_ratio = 0.0  # 0 = best quality; 1 = worst, but faster
+pv.global_theme.depth_peeling.enabled = True  # Enable depth peeling for transparency rendering (helps render overlapping translucent surfaces)
 
+pv.global_theme.anti_aliasing = "fxaa"  # smooth jagged edges
+pv.global_theme.volume_mapper = "gpu"  # use GPU acceleration for volume rendering
+pv.OFF_SCREEN = False  # set to F to render on screen (true would render off-screen)
+pv.global_theme.smooth_shading = True  # enable smooth shading for better-looking surfaces
+pv.global_theme.render_lines_as_tubes = True  # render all lines as tubes instead of flat 1D lines for better visibility
+pv.global_theme.multi_samples = 8  # set number of anti-aliasing samples (higher = smoother visuals)
+
+# debug output to confirm settings are active
 print(f"GPU Accelerated Rendering: {pv.OFF_SCREEN}")
 print("PyVista GPU Rendering Settings Applied!")
 
