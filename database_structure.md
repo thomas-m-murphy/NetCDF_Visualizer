@@ -89,14 +89,14 @@ Users can also **drag and drop** or browse for `.nc` files and:
 
 ## Additional Ideas
 
-Let users choose with a checkbox:
+- Let users choose with a checkbox:
 
 ```html
 <input type="checkbox" id="storeFile" name="storeFile" checked>
 <label for="storeFile">Store this file on the server for future access</label>
 ```
 
-Offer a **Download Visualization** button for users who are using temporary files. This allows them to save their generated 3D or 2D visualizations (e.g., HTML animations or images) locally for later viewing or sharing.
+- Offer a **Download Visualization** button for users who are using temporary files. This allows them to save their generated 3D or 2D visualizations (e.g., HTML animations or images) locally for later viewing or sharing.
 
 This gives users the benefit of temporary usage **without losing access** to interesting visualizations they create.
 
