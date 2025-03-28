@@ -79,7 +79,7 @@ NetCDF_Visualizer/
 
 ## 📘 Additional Information
 
-For more details on the structure of this project, see [`NetCDF_Visualizer/project_structure.md`](NetCDF_Visualizer/project_structure.md).
+For more details on the structure of this project, see [`project_structure.md`](project_structure.md).
 
 
 ## Contributing
