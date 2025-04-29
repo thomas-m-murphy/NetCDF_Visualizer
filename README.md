@@ -1,89 +1,106 @@
-
 # NetCDF Visualizer
 
-NetCDF Visualizer is a web-based tool that allows users to upload NetCDF (`.nc`) files and visualize **3D contour plots** with **field line tracing functionality**. Users can also generate **2D cross-sections** and **time-series line plots** of selected variables.
+NetCDF Visualizer is a web‑based tool that lets you upload NetCDF (`.nc`) files and interactively explore them as **3‑D contour plots** with **magnetic‑field‑line tracing**. You can also create **2‑D cross‑sections** and **time‑series line plots** for any variable.
 
 ## Features
-- ✔ Upload and visualize NetCDF files as interactive **3D contour plots**  
-- ✔ Click on the plot **or** manually enter coordinates to trace **field lines**  
-- ✔ Generate **2D cross-sections** of the dataset  
-- ✔ Create **line plots** of time-series data  
-- ✔ Export plots as **HTML** for easy sharing  
-- ✔ Built with **Flask and Plotly** for interactivity  
+- Upload NetCDF files and render interactive **3‑D isosurfaces**
+- Trace field lines by **clicking** on the plot or entering coordinates
+- Generate **2‑D cross‑sections** of the data cube
+- Produce **time‑series line plots** at selected points
+- Export plots as standalone **HTML**
+- Built with **Flask · Plotly · PyVista** for rich interactivity
 
 ---
 
 ## Installation
 
 ### Prerequisites
-Ensure you have **Python 3.8+** installed on your system.
+*Python 3.8+*
 
-### Setting Up the Virtual Environment
-Run the following commands in your terminal:
+### 1 · Create & activate a virtual environment
 
-#### Windows:
+<details><summary>Windows (cmd / PowerShell)</summary>
+
 ```sh
-python -m venv venv
-venv\Scripts\activate
+python -m venv plotGen
+plotGen\Scripts\activate
 ```
+</details>
 
-#### macOS/Linux:
+<details><summary>macOS / Linux</summary>
+
 ```sh
-python -m venv venv
-source venv/bin/activate
+python -m venv plotGen
+source plotGen/bin/activate
 ```
+</details>
 
-### Installing Dependencies
-After activating the virtual environment, install all required dependencies:
+### 2 · Install dependencies
 
 ```sh
 pip install flask numpy scipy matplotlib plotly netCDF4 pyvista psutil vtk
 ```
 
-### Running the Application
-Once all dependencies are installed, start the Flask application by running:
+---
+
+## Running the app
 
 ```sh
+cd flaskApp
 python app.py
 ```
+Then visit **http://127.0.0.1:5000** in your browser.
 
-Then, open your browser and navigate to:
+---
 
-```
-http://127.0.0.1:5000
-```
+## Quick start workflow
+1. Upload a `.nc` file  
+2. Choose a variable and plot options  
+3. Click **Plot** → interactive 3‑D contour displays  
+4. Click anywhere (or enter X Y Z) to add a **field line**  
+5. Manage / delete lines from the sidebar  
+6. Add **2‑D cross‑sections** or **line graphs** as needed  
+7. Download the generated HTML/PNG for sharing
 
-## Usage Instructions
-1️⃣ Upload a NetCDF (`.nc`) file.  
-2️⃣ Select the variable to visualize.  
-3️⃣ Adjust the color scale and opacity.  
-4️⃣ Click **Plot** to generate the **3D contour plot**.  
-5️⃣ Click on the plot or manually enter X, Y, Z coordinates to trace **field lines**.  
-6️⃣ View and manage active **field lines**.  
-7️⃣ Optionally, generate and view **2D cross-sections**.  
-8️⃣ Export and share visualizations as **HTML**.  
+---
 
-## File Structure
+## Project tree
+
 ```
 NetCDF_Visualizer/
-│── static/               # Static files (CSS, JS, images, plots)
-│── templates/            # HTML templates
-│── uploads/              # Uploaded .nc files (ignored in Git)
-│── app.py                # Main Flask application
-│── htmlPlotFieldLines.py # Field line visualization logic
-│── htmlPlotCrossSection.py # 2D cross-section visualization
-│── htmlPlotGenerator3D.py  # 3D plot generation
-│── plotLineGraph.py      # Line plot visualization
-│── README.md             # Documentation
-│── venv/                 # Virtual environment (ignored in Git)
+├── flaskApp/
+│   ├── app.py                    # Flask entry point
+│   ├── htmlPlotFieldLines.py     # 3‑D plots + field‑line tracing
+│   ├── htmlPlotCrossSection.py   # 2‑D cross‑sections
+│   ├── htmlPlotGenerator3D.py    # Isosurface helper
+│   ├── plotLineGraph.py          # Time‑series graphs
+│   ├── templates/                # Jinja2 templates
+│   ├── static/                   # Generated HTML/PNG assets
+│   ├── uploads/                  # Uploaded .nc files   (ignored by Git)
+│   └── fldData/                  # Cached field data    (ignored by Git)
+│
+├── plotGen/                      # Python virtual‑env    (ignored by Git)
+├── ncFileSize.py                 # Utility: quick dataset probe
+├── database_structure.md         # Design notes
+├── project_requirements.txt      # Requirement pins
+├── .gitignore                    # Git exclusions
+└── README.md                     # You are here
 ```
 
+> `uploads/` and `fldData/` are excluded via **.gitignore** so large user data never enters version control.
+
+---
+
 ## Contributing
-We welcome contributions! If you find a bug, have a feature request, or want to improve the code, feel free to open an issue or submit a pull request. 🚀
+Pull requests are welcome!  
+Open an issue for bugs or feature ideas.
+
+---
 
 ## License
-This project is open-source under the **MIT License**.
+**MIT** – do what you want, just keep the notice.
+
+---
 
 ## Credits
-This project was developed as part of a research effort at **Auburn University**, incorporating **Python, Flask, Plotly, and PyVista** to create an interactive visualization tool.
-
+Developed at **Auburn University** using Python, Flask, Plotly, PyVista, and the NetCDF4 ecosystem.
