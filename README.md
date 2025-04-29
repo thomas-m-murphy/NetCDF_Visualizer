@@ -8,7 +8,7 @@ NetCDF Visualizer is a web‑based tool that lets you upload NetCDF (`.nc`) file
 - Generate **2‑D cross‑sections** of the data cube
 - Produce **time‑series line plots** at selected points
 - Export plots as standalone **HTML**
-- Built with **Flask · Plotly · PyVista** for rich interactivity
+- Built with **Flask, Plotly, and PyVista** for rich interactivity
 
 ---
 
