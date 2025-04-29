@@ -87,20 +87,11 @@ NetCDF_Visualizer/
 └── README.md                     # You are here
 ```
 
-> `uploads/` and `fldData/` are excluded via **.gitignore** so large user data never enters version control.
-
----
-
-## Contributing
-Pull requests are welcome!  
-Open an issue for bugs or feature ideas.
-
 ---
 
 ## License
-**MIT** – do what you want, just keep the notice.
-
----
+This project is open-source under the **MIT License**.
 
 ## Credits
-Developed at **Auburn University** using Python, Flask, Plotly, PyVista, and the NetCDF4 ecosystem.
+This project was developed as part of a research effort at **Auburn University**, incorporating **Python, Flask, Plotly, and PyVista** to create an interactive visualization tool.
+
