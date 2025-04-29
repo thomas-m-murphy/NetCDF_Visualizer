@@ -1,3 +1,4 @@
+
 # NetCDF Visualizer
 
 NetCDF Visualizer is a web-based tool that allows users to upload NetCDF (`.nc`) files and visualize **3D contour plots** with **field line tracing functionality**. Users can also generate **2D cross-sections** and **time-series line plots** of selected variables.
@@ -77,11 +78,6 @@ NetCDF_Visualizer/
 │── venv/                 # Virtual environment (ignored in Git)
 ```
 
-## Additional Information
-
-For more details on the structure of this project, see [`project_structure.md`](project_structure.md).
-
-
 ## Contributing
 We welcome contributions! If you find a bug, have a feature request, or want to improve the code, feel free to open an issue or submit a pull request. 🚀
 
@@ -90,3 +86,4 @@ This project is open-source under the **MIT License**.
 
 ## Credits
 This project was developed as part of a research effort at **Auburn University**, incorporating **Python, Flask, Plotly, and PyVista** to create an interactive visualization tool.
+
