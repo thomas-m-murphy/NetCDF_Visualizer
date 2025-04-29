@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Field Line Plot</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+    <h2>3D Contour Plot with Field Lines</h2>
+    <div id="plot" style="width: 100%; height: 600px;"></div>
+
+    <script type="application/json" id="plot-data">
+        {{ plot_data | tojson | safe }}
+    </script>
+
+    <!-- Script section for plot interaction and field line generation -->
+<script>
+    // Fetch the plot data from the hidden JSON script
+    var plotData = JSON.parse(document.getElementById('plot-data').textContent);
+    
+    // Plot the data on page load
+    Plotly.newPlot('plot', plotData.data, plotData.layout);
+
+    // Add click event listener to capture click and send coordinates to the backend
+    document.getElementById('plot').on('plotly_click', function(data){
+        var x = data.points[0].x;
+        var y = data.points[0].y;
+        var z = data.points[0].z;
+
+        console.log('Clicked coordinates: ', x, y, z);  // Ensure that the coordinates are being logged
+
+        // Send the clicked coordinates to Flask via AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/field-line', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                // Parse the updated plot data and refresh the plot with the new field line
+                var responseData = JSON.parse(xhr.responseText);
+                Plotly.newPlot('plot', responseData.data, responseData.layout);  // Replot with new data
+            }
+        };
+        // Send X, Y, Z to the server to regenerate the plot with field lines
+        xhr.send(JSON.stringify({
+            x: x,
+            y: y,
+            z: z
+        }));
+    });
+</script>
+
+
+</body>
+</html>
